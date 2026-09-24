@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0E131A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Control Cultivo">
+<link rel="apple-touch-icon" href="./icono-512.png">
+<link rel="icon" type="image/png" href="./icono-512.png">
 <title>Control de Cultivo · Viana Hnos SRL</title>
 <style>
 :root{
@@ -808,6 +815,31 @@ const CRUDO=[
 ["Z","2026-08-28","F-2-7","ALTO","ALTO","NULO","NULO","NULO",""],
 ["Z","2026-08-28","I-1-12","ALTO","ALTO","BAJO","MEDIO","BAJO",""],
 ["Z","2026-08-28","J-1-12","ALTO","ALTO","BAJO","NULO","BAJO",""],
+// CV — 23/09
+  ["CV","2026-09-23","O-1-4","ALTO","MEDIO","NULO","BAJO","NULO","Se ven algunos yuyos dispersos que pueden ser sacados por los regadores"],
+  ["CV","2026-09-23","O-5-6","ALTO","ALTO","NULO","MEDIO","NULO","Se ven algunos yuyos dispersos que pueden ser sacados por los regadores"],
+  ["CV","2026-09-23","P-1-12","ALTO","MEDIO","NULO","BAJO","NULO","Se ven algunos yuyos dispersos que pueden ser sacados por los regadores"],
+  ["CV","2026-09-23","Q-1-12","ALTO","MEDIO","NULO","BAJO","NULO","Se ven algunos yuyos dispersos que pueden ser sacados por los regadores"],
+  ["CV","2026-09-23","C-1-5","ALTO","MEDIO","NULO","NULO","BAJO","Ya se aplicó herbicida. Se ven algunos yuyos que serán sacados con cuadrilla"],
+  ["CV","2026-09-23","C-10-12","ALTO","ALTO","NULO","BAJO","BAJO","Ya se aplicó herbicida. Se ven algunos yuyos que serán sacados con cuadrilla"],
+  ["CV","2026-09-23","D-1-7","ALTO","MEDIO","NULO","NULO","NULO","Ya se aplicó herbicida. Se ven algunos yuyos que serán sacados con cuadrilla"],
+  ["CV","2026-09-23","D-10-12","ALTO","ALTO","NULO","BAJO","BAJO","Ya se aplicó herbicida. Se ven algunos yuyos que serán sacados con cuadrilla"],
+  ["CV","2026-09-23","E-1-7","ALTO","MEDIO","NULO","BAJO","NULO","Se está aplicando herbicida"],
+  ["CV","2026-09-23","E-10-12","ALTO","ALTO","NULO","NULO","NULO","Se está aplicando herbicida"],
+  ["CV","2026-09-23","F-1-9","ALTO","MEDIO","NULO","BAJO","BAJO","Se está aplicando herbicida"],
+  ["CV","2026-09-23","F-10-12","ALTO","ALTO","NULO","NULO","BAJO","Se está aplicando herbicida"],
+  // PAS — 23/09
+  ["PAS","2026-09-23","J-V-1a6","ALTO","MEDIO","BAJO","BAJO","BAJO","Puntas amarillas. Hay trips"],
+  ["PAS","2026-09-23","K-V-3a6","ALTO","MEDIO","BAJO","BAJO","BAJO","Puntas amarillas. Hay trips. Zanahorilla en manchas"],
+  ["PAS","2026-09-23","K-V-7a12","ALTO","MEDIO","BAJO","BAJO","BAJO","Puntas amarillas. Hay trips. Zanahorilla en manchas"],
+  ["PAS","2026-09-23","M-V-7a12","ALTO","MEDIO","BAJO","MEDIO","BAJO","Puntas amarillas. Hay trips. La enfermedad no avanzó más, se quedó ahí"],
+  ["PAS","2026-09-23","N-V-7a12","ALTO","MEDIO","BAJO","BAJO","BAJO","Está más verde. Hay trips"],
+  ["PAS","2026-09-23","N-V-13a18","ALTO","MEDIO","BAJO","BAJO","BAJO","Está más verde. Hay trips. Se nota un poco más amarillo"],
+  ["PAS","2026-09-23","N-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Variación por tipo de tierra (transcripción parcial, confirmar con encargado)"],
+  ["PAS","2026-09-23","P-V-7a12","ALTO","MEDIO","BAJO","MEDIO","BAJO","Puntas amarillas. Hay trips. La enfermedad no avanzó más"],
+  ["PAS","2026-09-23","Q-V-7a12","ALTO","MEDIO","BAJO","BAJO","BAJO","Está más verde. Solo V-7 con las puntas amarillas. Semilla PA en el resto"],
+  ["PAS","2026-09-23","Q-V-13a18","ALTO","MEDIO","BAJO","BAJO","BAJO","Está más verde. Solo la V-16 está más fina. Semilla 5ta CV"],
+  ["PAS","2026-09-23","Q-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Está más verde casi todo. Solo V-19 con los tallos un poco más finos. Semilla 5ta CV"],
 ];
 
 const idx=v=>{if(v==null)return null;const s=String(v).trim().toUpperCase();
@@ -1054,6 +1086,11 @@ function dibujarPills(){
   pills(document.getElementById("pp"),PARAMS.map(p=>({v:p.k,l:p.l})),PARAM,setParam);
 }
 dibujarPills();render();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+}
 </script>
 </body>
 </html>
