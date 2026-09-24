@@ -1,0 +1,16 @@
+{
+  "name": "Control de Cultivo · Viana Hnos",
+  "short_name": "Control Cultivo",
+  "description": "Seguimiento de recorridos de campo por bloque — Viana Hnos SRL",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0E131A",
+  "theme_color": "#0E131A",
+  "lang": "es-AR",
+  "icons": [
+    { "src": "./icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
