@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control de Cultivo · Viana Hnos SRL</title>
+<style>
+:root{
+  --fondo:#0E131A; --papel:#182029; --tinta:#E9EEF4; --tenue:#96A3B3;
+  --regla:#2C3846; --linea:#46566B; --arcilla:#D9A657; --det:#E4695C; --mej:#5FBF87;
+  --n0:#212A36; --n1:#2A5C6B; --n2:#317F97; --n3:#4FAFBF; --n4:#8FE0E4;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 16px 60px}
+header{border-bottom:2px solid var(--regla);padding-bottom:14px;margin-bottom:20px}
+.kicker{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.18em;color:var(--tenue)}
+h1{font-size:32px;margin:6px 0 0;letter-spacing:-.01em;text-transform:uppercase;font-weight:700}
+header p{margin:6px 0 0;color:var(--tenue);font-size:13px;max-width:620px}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 10px;
+  padding-bottom:5px;border-bottom:1px solid var(--linea);font-weight:600}
+section{margin-bottom:28px}
+.nota{font-size:12.5px;color:var(--tenue);margin:0 0 10px;max-width:720px;line-height:1.5}
+.grupo{margin-bottom:14px}
+.grupo .lbl{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.16em;color:var(--tenue);margin-bottom:6px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+button.pill{font-family:ui-monospace,Menlo,monospace;font-size:12px;padding:7px 13px;cursor:pointer;
+  border:1px solid var(--linea);background:transparent;color:var(--tinta);border-radius:0}
+button.pill[aria-pressed="true"]{background:var(--tinta);color:var(--fondo)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;font-family:ui-monospace,Menlo,monospace;font-size:11.5px}
+th{font-weight:500;font-size:10px;letter-spacing:.08em;color:var(--tenue);padding:6px 7px;
+  text-align:center;border-bottom:1px solid var(--linea);white-space:nowrap}
+th.b{text-align:left;position:sticky;left:0;background:var(--fondo);z-index:2;min-width:104px}
+td{padding:7px;text-align:center;min-width:38px;border:1px solid var(--regla)}
+td.b{text-align:left;white-space:nowrap;position:sticky;left:0;background:var(--fondo);z-index:1;
+  padding-left:9px;border-left:4px solid transparent}
+td.arc{border-left-color:var(--arcilla)}
+td.agr{border-left:4px dotted var(--arcilla)}
+.tag{font-size:9px;color:var(--arcilla);margin-left:5px}
+.dot{position:absolute;top:2px;right:3px;width:4px;height:4px;border-radius:4px}
+td.cel{position:relative}
+.item{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:9px 12px;
+  background:var(--papel);border-left:3px solid var(--tenue);margin-bottom:6px;font-size:13px;line-height:1.45}
+.item .f{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:var(--tenue);min-width:38px}
+.item .bq{font-family:ui-monospace,Menlo,monospace;font-size:12px;min-width:92px}
+.item.det{border-left-color:var(--det)} .item.mej{border-left-color:var(--mej)}
+.item.par{border-left-color:var(--arcilla)} .item.ok{border-left-color:var(--mej)}
+.badge{font-family:ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.1em;min-width:104px}
+.alerta{padding:12px 14px;background:#2A1614;border:1px solid var(--det);margin-bottom:12px}
+.alerta .t{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.14em;color:var(--det);margin-bottom:6px}
+.leyenda{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:12px;
+  font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:var(--tenue)}
+.sw{width:13px;height:13px;border:1px solid var(--regla);display:inline-block;vertical-align:-2px;margin-right:4px}
+.barras{display:flex;gap:10px;align-items:flex-end;overflow-x:auto;padding-top:8px;min-height:220px}
+.col{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:44px}
+.pila{display:flex;flex-direction:column-reverse;width:34px;height:180px;justify-content:flex-start}
+.seg{width:100%}
+.xlab{font-family:ui-monospace,Menlo,monospace;font-size:10px;color:var(--tenue)}
+.vacio{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--tenue);margin:0}
+@media(max-width:600px){h1{font-size:24px}.wrap{padding:16px 12px 48px}.item .bq{min-width:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">VIANA HNOS S.R.L. · AJO · CAMPAÑA 2026</div>
+  <h1>Control de cultivo</h1>
+  <p>Recorridos de campo por bloque. Cada columna es una vuelta; un corte de color en sentido horizontal es un cambio de parámetro.</p>
+</header>
+
+<div class="grupo"><div class="lbl">FINCA</div><div class="pills" id="pf"></div></div>
+<div class="grupo"><div class="lbl">PARÁMETRO</div><div class="pills" id="pp"></div></div>
+
+<section><h2 id="t-mat">Matriz ordinal</h2>
+  <div class="scroll"><table id="matriz"></table></div>
+  <div class="leyenda" id="ley"></div>
+</section>
+
+<section><h2>Cambios respecto del recorrido anterior</h2><div id="trans"></div></section>
+
+<section><h2 id="t-comp">Composición de la finca por recorrido</h2>
+  <p class="nota">Cada barra es un recorrido y su altura es la cantidad de bloques relevados ese día, repartidos según el nivel en que fueron puntuados. Se lee la severidad y no solo la presencia.</p>
+  <div class="barras" id="barras"></div>
+  <p class="nota" id="nvar"></p>
+</section>
+
+<section><h2>Focos sanitarios sostenidos</h2><div id="pb"></div><div id="focos"></div></section>
+
+<section><h2>Observaciones de los encargados</h2><div id="obs"></div></section>
+
+<section><h2>Intervenciones y cobertura</h2>
+  <p class="nota">Solo se computa como ejecutada la notación “se aplicó”. Lo anotado como indicación queda en estado indeterminado: sin confirmación no se puede evaluar eficacia.</p>
+  <div id="interv"></div>
+</section>
+
+<section><h2>Control textural · tramo válvula 10-12</h2>
+  <p class="nota">El tramo 10-12 de las líneas C, D, E y F es arcilloso y el resto arenoso, así que retiene más agua por textura: una humedad un nivel por encima del sector arenoso es la línea de base, no una anomalía. Acá se listan solo las inversiones, que sí indican falla de entrega.</p>
+  <div id="text"></div>
+</section>
+</div>
+
+<script>
+const NIVELES=["NULO","BAJO","MEDIO","ALTO","EXCESIVO"];
+const ABREV={NULO:"N",BAJO:"B",MEDIO:"M",ALTO:"A",EXCESIVO:"E"};
+const RAMPA=["var(--n0)","var(--n1)","var(--n2)","var(--n3)","var(--n4)"];
+const TXT=["#7C8898","#DCEAF0","#F2FAFC","#07161C","#07161C"];
+const PARAMS=[{k:"verdor",l:"Verdor",d:1},{k:"humedad",l:"Humedad",d:0},{k:"plaga",l:"Plaga",d:-1},
+  {k:"enfermedad",l:"Enfermedad",d:-1},{k:"malezas",l:"Malezas",d:-1}];
+
+const CRUDO=[
+["PAS","2026-08-05","C-V-7a10","MEDIO","MEDIO","NULO","MEDIO","BAJO","Manchas lado sur y norte. Muy verde, amarilla las puntas. Repaso con gente"],
+["PAS","2026-08-05","D-V-7a10","MEDIO","MEDIO","NULO","BAJO","BAJO","Mucho vigor, amarilla las puntas. Repaso con gente"],
+["PAS","2026-08-05","F-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO","Mucho vigor. Por ahora repaso con gente"],
+["PAS","2026-08-05","G-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO","Muy verde, amarillo las puntas. Repaso con gente"],
+["PAS","2026-08-05","H-V-19a24","MEDIO","MEDIO","NULO","BAJO","MEDIO","Mucho vigor, hoja fina. Sacar a mano y aplicar herbicida"],
+["PAS","2026-08-05","H-V-13a18","MEDIO","MEDIO","NULO","BAJO","BAJO","Muy buena, puntas un poco más amarillas. Repaso con gente"],
+["PAS","2026-08-05","H-V-7a12","MEDIO","ALTO","NULO","BAJO","MEDIO","Aplicar herbicida, manchas de zanahorilla"],
+["PAS","2026-08-05","H-V-1a6","MEDIO","ALTO","NULO","BAJO","BAJO","Muy buena, mucho vigor. Repaso con gente"],
+["PAS","2026-08-05","I-V-1a6","MEDIO","ALTO","NULO","BAJO","MEDIO","Muy buena. Repaso con gente y aplicar herbicida por zanahorilla"],
+["PAS","2026-08-05","I-V-7a12","MEDIO","ALTO","NULO","BAJO","MEDIO","Excelente vigor. Repaso con gente y aplicar herbicida por zanahorilla"],
+["PAS","2026-08-05","I-V-13a18","MEDIO","MEDIO","NULO","BAJO","MEDIO","Muy buena, puntas un poco más amarillas. Aplicar herbicida"],
+["PAS","2026-08-05","I-V-19a24","MEDIO","MEDIO","NULO","BAJO","MEDIO","Mucho vigor, hoja fina. Aplicar herbicida"],
+["PAS","2026-08-10","C-V-7a10","MEDIO","MEDIO","NULO","MEDIO","BAJO","Está todo igual, no hay novedades"],
+["PAS","2026-08-10","D-V-7a10","MEDIO","MEDIO","NULO","BAJO","BAJO","Está igual, no hay novedades"],
+["PAS","2026-08-10","F-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO","Repaso con gente, cardo seco"],
+["PAS","2026-08-10","G-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO","Lado sur sometido al viento"],
+["PAS","2026-08-10","H-V-19a24","MEDIO","MEDIO","NULO","BAJO","MEDIO",""],
+["PAS","2026-08-10","H-V-13a18","MEDIO","MEDIO","NULO","BAJO","BAJO","Está todo igual"],
+["PAS","2026-08-10","H-V-7a12","MEDIO","MEDIO","NULO","BAJO","BAJO","No hay novedades"],
+["PAS","2026-08-10","H-V-1a6","MEDIO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-10","I-V-1a6","MEDIO","MEDIO","NULO","BAJO","MEDIO",""],
+["PAS","2026-08-10","I-V-7a12","MEDIO","MEDIO","NULO","BAJO","MEDIO",""],
+["PAS","2026-08-10","I-V-13a18","MEDIO","MEDIO","NULO","BAJO","MEDIO","Repaso cardo seco con gente"],
+["PAS","2026-08-10","I-V-19a24","MEDIO","MEDIO","NULO","BAJO","MEDIO",""],
+["PAS","2026-08-11","J-V-1a6","MEDIO","ALTO","NULO","BAJO","MEDIO","No hay cambios notables"],
+["PAS","2026-08-11","K-V-3a6","MEDIO","ALTO","NULO","BAJO","MEDIO",""],
+["PAS","2026-08-11","K-V-7a12","MEDIO","ALTO","NULO","BAJO","MEDIO",""],
+["PAS","2026-08-11","M-V-7a12","MEDIO","ALTO","NULO","MEDIO","BAJO",""],
+["PAS","2026-08-11","N-V-7a12","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-11","N-V-13a18","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-11","N-V-19a24","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-11","P-V-7a12","MEDIO","ALTO","NULO","MEDIO","BAJO",""],
+["PAS","2026-08-11","Q-V-7a12","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-11","Q-V-13a18","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-11","Q-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO","Terminar de regar hoy"],
+["PAN","2026-08-07","AN-V-1a6","MEDIO","MEDIO","NULO","BAJO","BAJO","Buena, mucho vigor. Algún centeno grande, repaso con gente"],
+["PAN","2026-08-07","BN-V-1a6","MEDIO","MEDIO","NULO","BAJO","BAJO","Buena, mucho vigor. Centeno grande, repaso con gente"],
+["PAN","2026-08-07","CN-V-1a12","MEDIO","MEDIO","NULO","BAJO","BAJO","Buena, mucho vigor. Algún centeno grande, repaso con gente"],
+["PAN","2026-08-07","GN-V-1a9","MEDIO","MEDIO","NULO","BAJO","BAJO","Bueno, mucho vigor. Algún centeno grande, repaso con gente"],
+["PAN","2026-08-07","HN-V-1a9","MEDIO","MEDIO","NULO","BAJO","BAJO","Bueno, mucho vigor. Algún centeno grande, repaso con gente"],
+["PAN","2026-08-12","AN-V-1a6","MEDIO","MEDIO","NULO","BAJO","BAJO","Centeno grande, repaso con gente. Todo lo demás sin cambios notables"],
+["PAN","2026-08-12","BN-V-1a6","MEDIO","MEDIO","NULO","BAJO","BAJO",""],
+["PAN","2026-08-12","CN-V-1a12","MEDIO","MEDIO","NULO","BAJO","BAJO",""],
+["PAN","2026-08-12","GN-V-1a9","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAN","2026-08-12","HN-V-1a9","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAN","2026-08-15","AN-V-1a6","MEDIO","MEDIO","NULO","BAJO","BAJO","Tiene color amarillo muy poquito en las puntas"],
+["PAN","2026-08-15","BN-V-1a6","MEDIO","MEDIO","NULO","BAJO","BAJO","Tiene color amarillo muy poquito en las puntas"],
+["PAN","2026-08-15","CN-V-1a12","MEDIO","MEDIO","NULO","BAJO","BAJO","Casi totalmente verde oscuro con mucho vigor"],
+["PAN","2026-08-15","GN-V-1a9","MEDIO","ALTO","NULO","BAJO","BAJO","Casi totalmente verde oscuro con mucho vigor"],
+["PAN","2026-08-15","HN-V-1a9","MEDIO","ALTO","NULO","BAJO","BAJO","Excelente"],
+["PAN","2026-08-20","AN-V-1a6","ALTO","MEDIO","NULO","BAJO","BAJO","Repaso centeno grande. No se encontró ni un trips. Verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["PAN","2026-08-20","BN-V-1a6","ALTO","MEDIO","NULO","BAJO","BAJO","No se encontró ni un trips. Verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["PAN","2026-08-20","CN-V-1a12","ALTO","MEDIO","NULO","BAJO","BAJO","Verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["PAN","2026-08-20","GN-V-1a9","ALTO","MEDIO","NULO","BAJO","BAJO","Verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["PAN","2026-08-20","HN-V-1a9","ALTO","MEDIO","NULO","BAJO","BAJO","Verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["CV","2026-08-06","O-1-6","ALTO","MEDIO","NULO","MEDIO","NULO",""],
+["CV","2026-08-06","P-1-12","ALTO","BAJO","NULO","NULO","NULO",""],
+["CV","2026-08-06","Q-1-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-08-06","F-1-12","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-06","E-1-12","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-06","C-1-12","ALTO","ALTO","NULO","NULO","MEDIO","Hojas anchas en válvulas 10-11"],
+["CV","2026-08-06","D-1-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-08-07","G-1-21","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-08-07","H-14-21","ALTO","BAJO","NULO","BAJO","NULO",""],
+["CV","2026-08-07","J-14-21","ALTO","BAJO","NULO","NULO","NULO",""],
+["CV","2026-08-07","I-4-13","ALTO","MEDIO","NULO","MEDIO","NULO",""],
+["CV","2026-08-07","T-9-14","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-07","S-12-23","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-07","R-14-26","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-10","C-1-5","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-10","C-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-10","D-1-7","ALTO","BAJO","NULO","NULO","BAJO",""],
+["CV","2026-08-10","D-10-12","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-10","F-1-12","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-10","E-1-7","ALTO","BAJO","NULO","NULO","BAJO",""],
+["CV","2026-08-10","E-10-12","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-10","O-1-6","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-10","P-1-12","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-10","Q-1-12","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-08-11","R-14-26","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-11","S-12-23","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-11","T-9-14","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-11","I-4-13","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-11","J-14-21","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-11","H-4-21","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-11","G-1-13","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-08-11","G-14-21","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-12","P-1-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-12","Q-1-12","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-08-12","O-1-6","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-12","F-1-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-12","E-1-12","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-12","C-1-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-12","D-1-12","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-13","C-V-7a10","MEDIO","MEDIO","NULO","MEDIO","BAJO","Repaso con gente. También hay cardo y yuyo de hoja ancha chiquita naciendo"],
+["PAS","2026-08-13","D-V-7a10","MEDIO","MEDIO","NULO","BAJO","BAJO","Cardo y yuyo de hoja ancha chiquita naciendo"],
+["PAS","2026-08-13","F-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO","Cardo y yuyo de hoja ancha chiquita naciendo"],
+["PAS","2026-08-13","G-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-13","H-V-19a24","MEDIO","MEDIO","NULO","BAJO","MEDIO","Repaso con gente y aplicación herbicida"],
+["PAS","2026-08-13","H-V-13a18","MEDIO","MEDIO","NULO","BAJO","BAJO","Repaso con gente. Cardo de hoja ancha chiquito naciendo"],
+["PAS","2026-08-13","H-V-7a12","MEDIO","ALTO","NULO","BAJO","MEDIO","Repaso con gente y aplicación herbicida"],
+["PAS","2026-08-13","H-V-1a6","MEDIO","ALTO","NULO","BAJO","BAJO","Repaso con gente. Centeno grande"],
+["PAS","2026-08-13","I-V-1a6","MEDIO","ALTO","NULO","BAJO","MEDIO","Yuyo y centeno grande. Repaso con gente y aplicación herbicida. Yuyo de hoja ancha y cardo naciendo"],
+["PAS","2026-08-13","I-V-7a12","MEDIO","ALTO","NULO","BAJO","MEDIO","Yuyo y centeno grande. Repaso con gente y aplicación herbicida. Yuyo de hoja ancha y cardo naciendo"],
+["PAS","2026-08-13","I-V-13a18","MEDIO","MEDIO","NULO","BAJO","MEDIO","Yuyo de hoja ancha y cardo naciendo. Aplicación herbicida"],
+["PAS","2026-08-13","I-V-19a24","MEDIO","MEDIO","NULO","BAJO","MEDIO","Yuyo de hoja ancha y cardo naciendo. Aplicación herbicida"],
+["PAS","2026-08-14","J-V-1a6","MEDIO","ALTO","NULO","BAJO","MEDIO","Repaso con gente. Centeno y yuyo grande y aplicación herbicida. Cardo y yuyo naciendo"],
+["PAS","2026-08-14","K-V-3a6","MEDIO","ALTO","NULO","BAJO","MEDIO","Centeno y yuyo grande y aplicación herbicida. Cardo y yuyo naciendo"],
+["PAS","2026-08-14","K-V-7a12","MEDIO","ALTO","NULO","BAJO","MEDIO","Centeno y yuyo grande y aplicación herbicida. Cardo y yuyo naciendo"],
+["PAS","2026-08-14","M-V-7a12","MEDIO","ALTO","NULO","MEDIO","BAJO","Repaso con gente. Centeno grande y yuyo. Aplicación herbicida. Cardo y yuyo de hoja ancha naciendo"],
+["PAS","2026-08-14","N-V-7a12","MEDIO","ALTO","NULO","BAJO","BAJO","Centeno grande y yuyo. Aplicación herbicida"],
+["PAS","2026-08-14","N-V-13a18","MEDIO","ALTO","NULO","BAJO","BAJO","Aplicación herbicida. Cardo y yuyo de hoja ancha naciendo"],
+["PAS","2026-08-14","N-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO","Cardo y yuyo de hoja ancha naciendo"],
+["PAS","2026-08-14","P-V-7a12","MEDIO","ALTO","NULO","MEDIO","BAJO",""],
+["PAS","2026-08-14","Q-V-7a12","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-14","Q-V-13a18","MEDIO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-14","Q-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-19","J-V-1a6","ALTO","MEDIO","NULO","BAJO","MEDIO","Repaso con gente. Algún yuyo y centeno grande. También aplicación herbicida"],
+["PAS","2026-08-19","K-V-3a6","ALTO","MEDIO","NULO","BAJO","MEDIO","Repaso con gente. Algún yuyo y centeno grande. También aplicación herbicida"],
+["PAS","2026-08-19","K-V-7a12","ALTO","MEDIO","NULO","BAJO","MEDIO","Repaso con gente. Algún yuyo y centeno grande. También aplicación herbicida"],
+["PAS","2026-08-19","M-V-7a12","ALTO","MEDIO","NULO","MEDIO","BAJO","Cardo y yuyo naciendo en todas las líneas"],
+["PAS","2026-08-19","N-V-7a12","ALTO","MEDIO","NULO","BAJO","BAJO","Cardo y yuyo naciendo en todas las líneas"],
+["PAS","2026-08-19","N-V-13a18","ALTO","MEDIO","NULO","BAJO","BAJO","Cardo y yuyo naciendo en todas las líneas"],
+["PAS","2026-08-19","N-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO","No se encontró ni un trips. Color verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["PAS","2026-08-19","P-V-7a12","ALTO","MEDIO","NULO","MEDIO","BAJO","No se encontró ni un trips. Color verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["PAS","2026-08-19","Q-V-7a12","ALTO","MEDIO","NULO","BAJO","BAJO","No se encontró ni un trips. Color verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["PAS","2026-08-19","Q-V-13a18","ALTO","MEDIO","NULO","BAJO","BAJO","No se encontró ni un trips. Color verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["PAS","2026-08-19","Q-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO","No se encontró ni un trips. Color verde oscuro con mucho vigor, ya casi no tiene las puntas amarillas"],
+["CV","2026-08-13","G-1-21","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-13","H-14-21","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-13","I-4-13","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-13","J-14-21","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-13","R-14-26","ALTO","ALTO","NULO","NULO","BAJO","Se aplicó herbicida"],
+["CV","2026-08-13","S-12-23","ALTO","MEDIO","NULO","NULO","BAJO","Se aplicó herbicida en el 85% de la superficie"],
+["CV","2026-08-13","T-9-14","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-14","C-1-12","ALTO","ALTO","NULO","NULO","BAJO","Se aplicó herbicida"],
+["CV","2026-08-14","D-1-12","ALTO","ALTO","NULO","BAJO","BAJO","Se aplicó herbicida"],
+["CV","2026-08-14","E-1-12","ALTO","ALTO","NULO","NULO","BAJO","Se aplicó herbicida"],
+["CV","2026-08-14","F-1-12","ALTO","ALTO","NULO","NULO","BAJO","Se aplicó herbicida"],
+["CV","2026-08-14","G-1-13","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-14","G-14-21","ALTO","ALTO","NULO","NULO","BAJO","Se aplicó herbicida en el 45% de la superficie"],
+["CV","2026-08-14","P-1-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-14","Q-1-12","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-08-14","O-1-6","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-18","P-1-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-18","Q-1-12","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-18","O-1-6","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-18","E-1-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-18","F-1-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-18","C-1-12","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-18","D-1-12","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-19","R-14-26","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-19","S-12-23","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-19","T-9-14","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-19","I-4-21","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-19","H-14-21","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-19","G-1-21","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-20","C-1-5","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-20","C-10-12","ALTO","EXCESIVO","NULO","NULO","BAJO",""],
+["CV","2026-08-20","D-1-7","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-20","D-10-12","ALTO","EXCESIVO","NULO","BAJO","BAJO",""],
+["CV","2026-08-20","E-1-7","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-20","E-10-12","ALTO","EXCESIVO","NULO","NULO","BAJO",""],
+["CV","2026-08-20","F-1-9","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-20","F-10-12","ALTO","EXCESIVO","NULO","NULO","BAJO",""],
+["CV","2026-08-20","O-1-4","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-20","O-5-6","ALTO","EXCESIVO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-20","P-1-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-20","Q-1-12","ALTO","ALTO","NULO","BAJO","BAJO","P.B. solo en válvula 1"],
+["CV","2026-08-21","G-1-13","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-21","G-14-21","ALTO","ALTO","NULO","BAJO","BAJO","P.B. solo en válvula 21, lado norte"],
+["CV","2026-08-21","H-14-21","ALTO","ALTO","NULO","BAJO","BAJO","P.B. solo en válvula 15, lado sur"],
+["CV","2026-08-21","I-4-13","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-21","I-14-21","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-21","R-15-26","ALTO","ALTO","NULO","NULO","BAJO","Humedad en exceso en válvulas 23 a 26"],
+["CV","2026-08-21","S-12-23","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-21","T-9-14","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-21","Q-1-12","","","","","","P.B. en válvula 12 hacia el norte, 2 puntos (reporte verbal, sin recorrido en planilla)"],
+["CV","2026-08-24","C-1-5","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-24","C-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-24","D-1-7","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-24","D-10-12","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-24","E-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-24","E-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-24","F-1-9","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-24","F-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-24","O-1-3","ALTO","MEDIO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-24","O-4-6","ALTO","ALTO","NULO","MEDIO","BAJO","Se pasó subsuelo sin topo"],
+["CV","2026-08-24","P-1-12","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-08-24","Q-1-12","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["PAN","2026-08-24","AN-V-1a6","ALTO","MEDIO","NULO","BAJO","BAJO","Humedad Alto en A 1a3, C 1a3, G 1a3 y H 9. Algún centeno grande para repaso con gente y aplicación herbicida por cardo y yuyo chico naciendo"],
+["PAN","2026-08-24","BN-V-1a6","ALTO","MEDIO","NULO","BAJO","BAJO","Algún centeno grande para repaso con gente y aplicación herbicida por cardo y yuyo chico naciendo"],
+["PAN","2026-08-24","CN-V-1a12","ALTO","MEDIO","NULO","BAJO","BAJO","Algún centeno grande para repaso con gente y aplicación herbicida por cardo y yuyo chico naciendo"],
+["PAN","2026-08-24","GN-V-1a9","ALTO","MEDIO","NULO","BAJO","BAJO","Algún centeno grande para repaso con gente y aplicación herbicida por cardo y yuyo chico naciendo"],
+["PAN","2026-08-24","HN-V-1a9","ALTO","MEDIO","NULO","BAJO","BAJO","Algún centeno grande para repaso con gente y aplicación herbicida por cardo y yuyo chico naciendo"],
+["MA","2026-07-28","43","ALTO","MEDIO","BAJO","NULO","BAJO","Bulbillos un poco más chicos"],
+["MA","2026-07-28","42","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-07-28","41","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-07-28","39","MEDIO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-08-04","39","MEDIO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-08-04","1","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-08-04","7","MEDIO","MEDIO","BAJO","NULO","MEDIO","Se aplicó herbicida, foliar e insecticida el 30-07"],
+["MA","2026-08-04","5","ALTO","ALTO","BAJO","NULO","MEDIO","Se aplicó herbicida, foliar e insecticida el 28-07"],
+["MA","2026-08-04","9","ALTO","ALTO","BAJO","NULO","MEDIO","Se aplicó herbicida, foliar e insecticida el 28-07"],
+["MA","2026-08-04","10","ALTO","ALTO","BAJO","NULO","MEDIO","Se aplicó foliar, herbicida e insecticida el 28-07"],
+["MA","2026-08-04","25","ALTO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-04","28","ALTO","ALTO","BAJO","NULO","BAJO","Lado norte, 7 metros con menos tamaño por sombra"],
+["MA","2026-08-04","30","ALTO","ALTO","BAJO","NULO","MEDIO","Lado norte, 7 metros con menos tamaño por sombra"],
+["MA","2026-08-04","32","ALTO","ALTO","BAJO","NULO","BAJO","Lado norte, 7 metros con menos tamaño por sombra"],
+["MA","2026-08-04","34","ALTO","ALTO","BAJO","NULO","BAJO","Lado norte, 7 metros con menos tamaño por sombra"],
+["MA","2026-08-04","36","ALTO","ALTO","BAJO","NULO","BAJO","Lado norte, 7 metros con menos tamaño por sombra"],
+["MA","2026-08-04","38","ALTO","ALTO","BAJO","NULO","BAJO","Lado norte, 7 metros con menos tamaño por sombra"],
+["MA","2026-08-04","29","MEDIO","ALTO","BAJO","NULO","BAJO","Menos color"],
+["MA","2026-08-04","27","MEDIO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-20","43","MEDIO","MEDIO","BAJO","NULO","MEDIO","Válvulas 8 a 23: aumentar fertilizante, ajos más chicos"],
+["MA","2026-08-20","42","ALTO","MEDIO","BAJO","NULO","MEDIO","Válvulas 1 a 6: aumentar fertilizante, ajos más chicos"],
+["MA","2026-08-20","41","ALTO","MEDIO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-20","39","ALTO","MEDIO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-24","26","ALTO","ALTO","BAJO","NULO","ALTO","Ajos más chicos, aumentar fertilizante"],
+["MA","2026-08-24","28","ALTO","ALTO","BAJO","NULO","ALTO","Válvulas 7, 8 y 9: ajos más chicos, aumentar fertilizante"],
+["MA","2026-08-24","30","ALTO","MEDIO","BAJO","NULO","ALTO",""],
+["MA","2026-08-24","32","ALTO","ALTO","BAJO","NULO","ALTO",""],
+["MA","2026-08-24","34","ALTO","ALTO","BAJO","NULO","ALTO",""],
+["MA","2026-08-24","36","ALTO","ALTO","BAJO","NULO","ALTO",""],
+["MA","2026-08-24","38","ALTO","EXCESIVO","BAJO","NULO","ALTO",""],
+["MA","2026-08-24","29","MEDIO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-24","27","MEDIO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-24","25","ALTO","ALTO","BAJO","NULO","MEDIO",""],
+["CV","2026-08-25","G-1-6","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-25","G-7-13","ALTO","ALTO","NULO","BAJO","NULO","P.B. en válvula 12, lado sur"],
+["CV","2026-08-25","G-14-18","ALTO","EXCESIVO","NULO","NULO","NULO",""],
+["CV","2026-08-25","G-19-21","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-25","H-14-17","ALTO","EXCESIVO","NULO","BAJO","BAJO","P.B. en válvula 15, lado sur"],
+["CV","2026-08-25","H-19-21","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-25","I-4-13","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-08-25","I-14-21","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-25","R-15-26","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-25","S-12-23","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-25","T-9-14","ALTO","MEDIO","NULO","NULO","BAJO","Se aplicó herbicida"],
+["PAS","2026-08-25","C-V-7a10","MEDIO","MEDIO","BAJO","MEDIO","BAJO","Se pusieron amarillas las puntas, abajo están bien verdes. Hay trips"],
+["PAS","2026-08-25","D-V-7a10","MEDIO","MEDIO","BAJO","BAJO","BAJO","Se pusieron amarillas las puntas, abajo están bien verdes. Hay trips"],
+["PAS","2026-08-25","F-V-19a24","MEDIO","MEDIO","BAJO","BAJO","BAJO","Se pusieron amarillas las puntas, abajo están bien verdes. Hay trips"],
+["PAS","2026-08-25","G-V-19a24","MEDIO","MEDIO","BAJO","BAJO","BAJO","Se pusieron amarillas las puntas, abajo están bien verdes. Hay trips"],
+["PAS","2026-08-25","H-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-25","H-V-13a18","MEDIO","MEDIO","NULO","BAJO","BAJO","Se pusieron amarillas la punta de las hojas, la parte de abajo está bien verde oscuro y con mucho vigor"],
+["PAS","2026-08-25","H-V-7a12","MEDIO","ALTO","NULO","BAJO","BAJO","Se pusieron amarillas la punta de las hojas, la parte de abajo está bien verde oscuro y con mucho vigor"],
+["PAS","2026-08-25","H-V-1a6","MEDIO","ALTO","NULO","BAJO","BAJO","Se pusieron amarillas la punta de las hojas, la parte de abajo está bien verde oscuro y con mucho vigor"],
+["PAS","2026-08-25","I-V-1a6","MEDIO","ALTO","NULO","BAJO","MEDIO","Se pusieron amarillas la punta de las hojas, la parte de abajo está bien verde oscuro y con mucho vigor"],
+["PAS","2026-08-25","I-V-7a12","MEDIO","ALTO","NULO","BAJO","MEDIO","Se pusieron amarillas la punta de las hojas, la parte de abajo está bien verde oscuro y con mucho vigor"],
+["PAS","2026-08-25","I-V-13a18","MEDIO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-25","I-V-19a24","MEDIO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-08-26","C-1-5","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-26","C-10-12","ALTO","EXCESIVO","NULO","BAJO","BAJO",""],
+["CV","2026-08-26","D-1-7","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-26","D-10-12","ALTO","EXCESIVO","NULO","BAJO","BAJO",""],
+["CV","2026-08-26","E-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-08-26","E-10-12","ALTO","EXCESIVO","NULO","NULO","NULO",""],
+["CV","2026-08-26","F-1-9","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-26","F-10-12","ALTO","EXCESIVO","NULO","NULO","BAJO",""],
+["CV","2026-08-26","O-1-4","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-26","O-5-6","ALTO","EXCESIVO","NULO","MEDIO","NULO",""],
+["CV","2026-08-26","P-1-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-08-26","Q-1-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-08-27","G-1-13","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-08-27","G-14-21","ALTO","EXCESIVO","NULO","NULO","NULO","El exceso es por la lluvia"],
+["CV","2026-08-27","H-14-21","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-08-27","I-4-13","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-27","I-14-21","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-27","R-15-26","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-27","S-12-23","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-27","T-9-14","ALTO","ALTO","NULO","NULO","NULO",""],
+["PAS","2026-08-26","J-V-1a6","MEDIO","ALTO","NULO","BAJO","MEDIO","Humedad más que Alto por la lluvia. Puntas amarillas por la última helada, abajo verde oscuro con mucho vigor. Ya se aplicó herbicida; falta N 15 a 24 y Q 13 a 24, y repaso de centeno y yuyo grande"],
+["PAS","2026-08-26","K-V-3a6","MEDIO","ALTO","NULO","BAJO","MEDIO","Ya se aplicó herbicida; falta N 15 a 24 y Q 13 a 24, y repaso de centeno y yuyo grande"],
+["PAS","2026-08-26","K-V-7a12","MEDIO","ALTO","NULO","BAJO","MEDIO","Ya se aplicó herbicida; falta N 15 a 24 y Q 13 a 24, y repaso de centeno y yuyo grande"],
+["PAS","2026-08-26","M-V-7a12","MEDIO","ALTO","NULO","MEDIO","BAJO","Ya se aplicó herbicida"],
+["PAS","2026-08-26","N-V-7a12","MEDIO","ALTO","NULO","BAJO","BAJO","Ya se aplicó herbicida"],
+["PAS","2026-08-26","N-V-13a18","MEDIO","ALTO","NULO","BAJO","BAJO","Ya se aplicó herbicida"],
+["PAS","2026-08-26","N-V-19a24","MEDIO","ALTO","NULO","BAJO","BAJO","Falta aplicar en válvulas 15 a 24"],
+["PAS","2026-08-26","P-V-7a12","MEDIO","ALTO","NULO","MEDIO","BAJO","Ya se aplicó herbicida"],
+["PAS","2026-08-26","Q-V-7a12","MEDIO","ALTO","NULO","BAJO","BAJO","Ya se aplicó herbicida"],
+["PAS","2026-08-26","Q-V-13a18","MEDIO","ALTO","NULO","BAJO","BAJO","Falta aplicar en válvulas 13 a 24"],
+["PAS","2026-08-26","Q-V-19a24","MEDIO","ALTO","NULO","BAJO","BAJO","Falta aplicar en válvulas 13 a 24"],
+["PAN","2026-08-27","AN-V-1a6","ALTO","ALTO","NULO","BAJO","BAJO","Humedad excelente. Verde oscuro con mucho vigor. No hay trips. Aplicar herbicida y repaso con gente"],
+["PAN","2026-08-27","BN-V-1a6","ALTO","ALTO","NULO","BAJO","BAJO","Verde oscuro con mucho vigor. No hay trips. Aplicar herbicida y repaso con gente"],
+["PAN","2026-08-27","CN-V-1a12","ALTO","ALTO","NULO","BAJO","BAJO","Verde oscuro con mucho vigor. No hay trips. Aplicar herbicida y repaso con gente"],
+["PAN","2026-08-27","GN-V-1a9","ALTO","ALTO","NULO","BAJO","BAJO","No hay trips. Aplicar herbicida y repaso con gente"],
+["PAN","2026-08-27","HN-V-1a9","ALTO","ALTO","NULO","BAJO","BAJO","No hay trips. Aplicar herbicida y repaso con gente"],
+["MA","2026-08-25","1","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-25","2","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-25","3","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-25","4","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-25","5","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-25","6","ALTO","ALTO","BAJO","NULO","ALTO",""],
+["MA","2026-08-25","7","ALTO","ALTO","BAJO","NULO","NULO",""],
+["MA","2026-08-25","8","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-25","9","ALTO","ALTO","BAJO","NULO","ALTO",""],
+["MA","2026-08-25","10","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-28","25","ALTO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-28","26","ALTO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-28","27","MEDIO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-28","28","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["MA","2026-08-28","29","MEDIO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-28","30","ALTO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-28","32","ALTO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-28","34","ALTO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-28","36","ALTO","ALTO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-28","38","ALTO","ALTO","BAJO","NULO","ALTO",""],
+["MA","2026-08-28","39","ALTO","ALTO","NULO","NULO","BAJO",""],
+["MA","2026-08-28","41","ALTO","ALTO","NULO","NULO","NULO",""],
+["MA","2026-08-28","42","ALTO","ALTO","NULO","NULO","NULO",""],
+["MA","2026-08-28","43","ALTO","ALTO","NULO","NULO","NULO",""],
+["PAS","2026-08-28","C-V-7a10","ALTO","ALTO","BAJO","MEDIO","BAJO","Hay trips. En estas 4 cuadras no se agregó insecticida en la aplicación de herbicida"],
+["PAS","2026-08-28","D-V-7a10","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips. En estas 4 cuadras no se agregó insecticida en la aplicación de herbicida"],
+["PAS","2026-08-28","F-V-19a24","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips. En estas 4 cuadras no se agregó insecticida en la aplicación de herbicida"],
+["PAS","2026-08-28","G-V-19a24","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips. En estas 4 cuadras no se agregó insecticida en la aplicación de herbicida"],
+["PAS","2026-08-28","H-V-19a24","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-28","H-V-13a18","ALTO","ALTO","NULO","BAJO","BAJO","Se pusieron verde oscuro y se recuperó por las lluvias; las puntas amarillas ya casi no existen"],
+["PAS","2026-08-28","H-V-7a12","ALTO","ALTO","NULO","BAJO","BAJO","Se pusieron verde oscuro y se recuperó por las lluvias; las puntas amarillas ya casi no existen"],
+["PAS","2026-08-28","H-V-1a6","ALTO","ALTO","NULO","BAJO","BAJO","Se pusieron verde oscuro y se recuperó por las lluvias; las puntas amarillas ya casi no existen"],
+["PAS","2026-08-28","I-V-1a6","ALTO","ALTO","NULO","BAJO","MEDIO","Se pusieron verde oscuro y se recuperó por las lluvias; las puntas amarillas ya casi no existen"],
+["PAS","2026-08-28","I-V-7a12","ALTO","ALTO","NULO","BAJO","MEDIO","Se pusieron verde oscuro y se recuperó por las lluvias; las puntas amarillas ya casi no existen"],
+["PAS","2026-08-28","I-V-13a18","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["PAS","2026-08-28","I-V-19a24","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-08-28","G-1-9","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-28","G-10-18","ALTO","EXCESIVO","NULO","BAJO","NULO","El exceso es por la lluvia"],
+["CV","2026-08-28","G-19-21","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-28","H-14-18","ALTO","EXCESIVO","NULO","BAJO","NULO","P.B. en válvula 15"],
+["CV","2026-08-28","H-19-21","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-28","I-4-13","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-08-28","I-14-21","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-28","R-15-26","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-28","S-12-23","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-08-28","T-9-14","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-31","E-1-7","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-08-31","F-1-9","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-08-31","P-1-12","ALTO","MEDIO","NULO","BAJO","NULO","No se nota diferencia"],
+["CV","2026-08-31","Q-1-12","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-08-31","O-1-4","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-08-31","O-5-6","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-09-01","G-1-13","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-01","G-14-21","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-01","H-14-21","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-01","I-4-13","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-09-01","I-14-21","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-01","R-15-26","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-01","S-12-23","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-01","T-9-14","ALTO","MEDIO","NULO","NULO","NULO",""],
+["PAS","2026-09-01","J-V-1a6","ALTO","MEDIO","BAJO","BAJO","MEDIO","Trips: uno que otro"],
+["PAS","2026-09-01","K-V-3a6","ALTO","MEDIO","BAJO","BAJO","MEDIO","Trips: uno que otro"],
+["PAS","2026-09-01","K-V-7a12","ALTO","MEDIO","BAJO","BAJO","MEDIO","Trips: uno que otro"],
+["PAS","2026-09-01","M-V-7a12","ALTO","MEDIO","NULO","MEDIO","BAJO",""],
+["PAS","2026-09-01","N-V-7a12","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-09-01","N-V-13a18","ALTO","MEDIO","NULO","BAJO","BAJO","Bien verde"],
+["PAS","2026-09-01","N-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-09-01","P-V-7a12","ALTO","MEDIO","NULO","MEDIO","BAJO",""],
+["PAS","2026-09-01","Q-V-7a12","ALTO","MEDIO","NULO","BAJO","BAJO","Bien verde"],
+["PAS","2026-09-01","Q-V-13a18","ALTO","MEDIO","BAJO","BAJO","BAJO","Trips: uno que otro"],
+["PAS","2026-09-01","Q-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Bien verde. Trips: uno que otro"],
+["MA","2026-08-31","25","ALTO","MEDIO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-31","26","ALTO","MEDIO","NULO","NULO","MEDIO","Ajos más chicos"],
+["MA","2026-08-31","27","ALTO","MEDIO","BAJO","NULO","MEDIO","Válvula 2 con verdor Medio"],
+["MA","2026-08-31","28","ALTO","MEDIO","NULO","NULO","BAJO","Válvulas 1, 2 y 3 con verdor Medio"],
+["MA","2026-08-31","29","MEDIO","MEDIO","BAJO","NULO","MEDIO","Válvulas 2 y 3 con verdor Bajo"],
+["MA","2026-08-31","30","ALTO","MEDIO","NULO","NULO","ALTO","Centeno controlado"],
+["MA","2026-08-31","32","ALTO","MEDIO","NULO","NULO","ALTO","Malezas controladas"],
+["MA","2026-08-31","34","ALTO","MEDIO","BAJO","NULO","ALTO",""],
+["MA","2026-08-31","36","MEDIO","MEDIO","BAJO","NULO","MEDIO",""],
+["MA","2026-08-31","38","MEDIO","MEDIO","BAJO","NULO","ALTO","Centeno controlado"],
+["MA","2026-09-01","41","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["MA","2026-09-01","42","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["MA","2026-09-01","43","MEDIO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-02","C-1-5","ALTO","MEDIO","NULO","NULO","NULO","En este recorrido no se ve diferencia en el verdor"],
+["CV","2026-09-02","C-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-02","D-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-02","D-10-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-02","E-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-02","E-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-02","F-1-9","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-02","F-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-02","O-1-4","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-02","O-5-7","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-09-02","P-1-12","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-02","Q-1-12","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["PAN","2026-09-02","AN-V-1a6","ALTO","ALTO","NULO","BAJO","BAJO","Verde oscuro con mucho vigor"],
+["PAN","2026-09-02","BN-V-1a6","ALTO","ALTO","NULO","BAJO","BAJO","Bien verde. Centeno grande"],
+["PAN","2026-09-02","CN-V-1a12","ALTO","ALTO","NULO","BAJO","BAJO","Bien verde. Centeno grande"],
+["PAN","2026-09-02","GN-V-1a9","ALTO","ALTO","NULO","BAJO","BAJO","Bien verde. Centeno grande"],
+["PAN","2026-09-02","HN-V-1a9","ALTO","ALTO","NULO","BAJO","BAJO","Bien verde. Centeno grande"],
+["CV","2026-09-04","C-1-5","ALTO","ALTO","NULO","NULO","NULO","Las plantas en general se ven más verdes en su totalidad, ya que las puntas amarillas son menos"],
+["CV","2026-09-04","C-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-04","D-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-04","D-10-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-04","E-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-04","E-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-04","F-1-9","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-04","F-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-04","O-1-4","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-04","O-5-6","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-09-04","P-1-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-04","Q-1-12","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-07","G-1-13","ALTO","ALTO","NULO","BAJO","NULO","Humedad excesiva en válvulas 7 a 13"],
+["CV","2026-09-07","G-14-21","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-07","H-14-18","ALTO","EXCESIVO","NULO","BAJO","NULO",""],
+["CV","2026-09-07","H-19-21","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-07","I-4-13","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-09-07","I-14-21","ALTO","MEDIO","NULO","BAJO","NULO","P.B. en válvula 16, lado sur"],
+["CV","2026-09-07","R-15-26","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-07","S-12-23","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-07","T-9-14","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-08","C-1-5","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-08","C-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-08","D-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-08","D-10-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-08","E-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-08","E-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-08","F-1-9","ALTO","MEDIO","NULO","BAJO","BAJO","P.B. en válvula 2, lado sur"],
+["CV","2026-09-08","F-10-12","ALTO","ALTO","NULO","NULO","MEDIO",""],
+["CV","2026-09-08","O-1-4","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-08","O-5-6","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-09-08","P-1-10","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-08","P-11-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-08","Q-1-12","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["MA","2026-09-08","1","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-08","2","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-08","3","MEDIO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-08","4","MEDIO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-08","5","ALTO","MEDIO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-08","6","ALTO","MEDIO","BAJO","NULO","MEDIO",""],
+["MA","2026-09-08","7","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-08","8","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-08","9","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-08","10","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["PAS","2026-09-08","J-V-1a6","ALTO","MEDIO","NULO","BAJO","BAJO","Amarillo las puntas"],
+["PAS","2026-09-08","K-V-3a6","ALTO","ALTO","NULO","BAJO","BAJO","No hay trips"],
+["PAS","2026-09-08","K-V-7a12","ALTO","ALTO","NULO","BAJO","BAJO","No hay trips"],
+["PAS","2026-09-08","M-V-7a12","ALTO","ALTO","NULO","MEDIO","BAJO","No hay trips"],
+["PAS","2026-09-08","N-V-7a12","ALTO","ALTO","NULO","BAJO","BAJO","No hay trips"],
+["PAS","2026-09-08","N-V-13a18","ALTO","MEDIO","NULO","BAJO","BAJO","Mucho más verde oscuro"],
+["PAS","2026-09-08","N-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO","No hay trips"],
+["PAS","2026-09-08","P-V-7a12","ALTO","ALTO","NULO","MEDIO","BAJO","No hay trips"],
+["PAS","2026-09-08","Q-V-7a12","ALTO","ALTO","NULO","BAJO","BAJO","Verde oscuro"],
+["PAS","2026-09-08","Q-V-13a18","ALTO","MEDIO","NULO","BAJO","BAJO","Válvulas 16 a 18 verde oscuro"],
+["PAS","2026-09-08","Q-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO","Mucho más verde oscuro"],
+["CV","2026-09-09","G-1-6","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-09","G-7-17","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-09","G-18-21","ALTO","MEDIO","NULO","BAJO","NULO","El verdor se ve más alto de válvula 18 a 21"],
+["CV","2026-09-09","H-14-17","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-09","H-18-21","ALTO","MEDIO","NULO","NULO","NULO","Revisar humedad en válvula 18"],
+["CV","2026-09-09","I-4-13","ALTO","MEDIO","NULO","MEDIO","NULO",""],
+["CV","2026-09-09","I-14-21","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-09","R-15-26","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-09","S-12-23","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-09","T-9-14","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-10","O-1-4","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-10","O-5-6","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-09-10","P-1-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-10","Q-1-12","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-10","C-1-5","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-10","C-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-10","D-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-10","D-10-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-10","E-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-10","E-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-10","F-1-9","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-10","F-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["PAS","2026-09-10","C-V-7a10","ALTO","MEDIO","NULO","MEDIO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","D-V-7a10","ALTO","MEDIO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","F-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","G-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","H-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","H-V-13a18","ALTO","MEDIO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","H-V-7a12","ALTO","ALTO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","H-V-1a6","ALTO","ALTO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","I-V-1a6","ALTO","ALTO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","I-V-7a12","ALTO","ALTO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","I-V-13a18","ALTO","MEDIO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["PAS","2026-09-10","I-V-19a24","ALTO","MEDIO","NULO","BAJO","BAJO","Cardos naciendo en las puntas. No se encontraron trips"],
+["CV","2026-09-11","R-15-26","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-11","S-12-23","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-11","T-9-14","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-11","I-4-13","ALTO","MEDIO","NULO","MEDIO","NULO",""],
+["CV","2026-09-11","I-14-21","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-11","H-14-18","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-11","H-19-21","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-11","G-1-6","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-11","G-7-18","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-11","G-19-21","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-14","P-1-10","ALTO","MEDIO","NULO","BAJO","NULO","El verde alto de las plantas es por la lluvia del viernes"],
+["CV","2026-09-14","P-11-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-14","Q-1-12","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-14","O-1-4","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-14","O-5-6","ALTO","ALTO","NULO","MEDIO","NULO",""],
+["CV","2026-09-14","F-1-9","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-14","F-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-14","E-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-14","E-10-12","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-14","C-1-5","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-14","C-10-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["CV","2026-09-14","D-1-7","ALTO","BAJO","NULO","NULO","NULO",""],
+["CV","2026-09-14","D-10-12","ALTO","ALTO","NULO","BAJO","NULO",""],
+["PAN","2026-09-14","AN-V-1a6","ALTO","MEDIO","NULO","BAJO","BAJO","Válvula 1 parte y válvulas 2, 3 y 4 parte: está más chico. No hace falta fertilizante extra"],
+["PAN","2026-09-14","BN-V-1a6","ALTO","MEDIO","NULO","BAJO","BAJO","Válvula 4 parte y válvulas 5 y 6 parte: está más chico. No hace falta fertilizante extra"],
+["PAN","2026-09-14","CN-V-1a12","ALTO","MEDIO","NULO","BAJO","BAJO","Válvula 7 parte y válvulas 8 y 9: más chica. No hace falta fertilizante extra"],
+["PAN","2026-09-14","GN-V-1a9","ALTO","MEDIO","NULO","BAJO","BAJO","Partes amarillas y rosas están más chicas. No hace falta fertilizante extra"],
+["PAN","2026-09-14","HN-V-1a9","ALTO","MEDIO","NULO","BAJO","BAJO","Válvulas 7 y 8 más chicas, no hace falta extra. Válvula 9 lado este: falta fertilizante extra"],
+["CV","2026-09-15","R-15-26","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-15","S-12-23","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-15","T-9-14","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-15","I-4-13","ALTO","MEDIO","NULO","MEDIO","BAJO",""],
+["CV","2026-09-15","I-14-21","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-09-15","H-14-18","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-09-15","H-19-21","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-15","G-1-6","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-15","G-7-18","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-09-15","G-19-21","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["PAS","2026-09-15","C-V-7a10","ALTO","MEDIO","BAJO","MEDIO","BAJO","Diferencia de verdor atribuida a cambio de tierra, no a fertilidad. Puede ser por bordes de relleno"],
+["PAS","2026-09-15","D-V-7a10","ALTO","MEDIO","BAJO","BAJO","BAJO","La diferencia es por cambio de tierra; el sector es más arenoso. Incide la clasificación de semilla"],
+["PAS","2026-09-15","F-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Zona más arenosa; hoja más fina. Ver con Danilo"],
+["PAS","2026-09-15","G-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Hojas más finas: no ayuda el fertilizante"],
+["PAS","2026-09-15","H-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Hojas más finas: no ayuda el fertilizante"],
+["PAS","2026-09-15","H-V-13a18","ALTO","MEDIO","BAJO","BAJO","BAJO","Misma semilla; la diferencia es por tierra"],
+["PAS","2026-09-15","H-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Mejor variación por tierra"],
+["PAS","2026-09-15","H-V-1a6","ALTO","ALTO","BAJO","BAJO","BAJO","Variación por tierra"],
+["PAS","2026-09-15","I-V-1a6","ALTO","ALTO","BAJO","BAJO","BAJO","Variación por cambio de tierra"],
+["PAS","2026-09-15","I-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Diferencia por variación de tierra hacia el lado norte"],
+["PAS","2026-09-15","I-V-13a18","ALTO","MEDIO","BAJO","BAJO","BAJO","La tierra está un poco más fina; hay algo más de variación"],
+["PAS","2026-09-15","I-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","La tierra es más uniforme"],
+["CV","2026-09-16","C-1-5","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-16","C-10-12","ALTO","ALTO","NULO","BAJO","BAJO","Ya se aplicó herbicida"],
+["CV","2026-09-16","D-1-7","ALTO","ALTO","NULO","NULO","NULO",""],
+["CV","2026-09-16","D-10-12","ALTO","ALTO","NULO","BAJO","BAJO","Ya se aplicó herbicida"],
+["CV","2026-09-16","E-1-7","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-16","E-10-12","ALTO","ALTO","NULO","NULO","BAJO","Ya se aplicó herbicida"],
+["CV","2026-09-16","F-1-9","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-16","F-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-16","O-1-4","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-16","O-5-6","ALTO","ALTO","NULO","MEDIO","BAJO",""],
+["CV","2026-09-16","P-1-9","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-16","P-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-16","Q-1-12","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["PAS","2026-09-16","J-V-1a6","ALTO","ALTO","BAJO","BAJO","BAJO","Válvulas 1 y 2 con semilla más chica y verde campo viejo; el resto es semilla del año y varía con la tierra"],
+["PAS","2026-09-16","K-V-3a6","ALTO","ALTO","BAJO","BAJO","BAJO","Válvulas 5 y 6: tierra más dura y semilla. Válvula 7: hoja más fina"],
+["PAS","2026-09-16","K-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Válvula 7 parte: los dos factores son tierra y semilla; el resto, diferencia mínima por tierra"],
+["PAS","2026-09-16","M-V-7a12","ALTO","ALTO","BAJO","MEDIO","BAJO","Todo el cuadro con diferencia mínima; factor tierra"],
+["PAS","2026-09-16","N-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Todo el cuadro con diferencia mínima; factor semilla. Trips: hay uno que otro en todos"],
+["PAS","2026-09-16","N-V-13a18","ALTO","ALTO","BAJO","BAJO","BAJO","Diferencia mínima por semilla. Trips: hay uno que otro en todos"],
+["PAS","2026-09-16","N-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Válvulas 20 y 21 parte: tallos más delgados, semilla de 4ta"],
+["PAS","2026-09-16","P-V-7a12","ALTO","ALTO","BAJO","MEDIO","BAJO","Válvulas 10, 11 y 12: hay diferencia mínima en tallo"],
+["PAS","2026-09-16","Q-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Válvulas 7 a 12: diferencia en color; una parte es semilla CV y el resto MA"],
+["PAS","2026-09-16","Q-V-13a18","ALTO","ALTO","BAJO","BAJO","BAJO","Válvulas 13 y 14: la semilla CV está mínimamente más delgada en los tallos"],
+["PAS","2026-09-16","Q-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Válvula 19 parte: se ven levemente más delgados los tallos, semilla de 5ta CV"],
+["PAS","2026-09-18","C-V-7a10","ALTO","MEDIO","BAJO","MEDIO","BAJO","Más amarillas las puntas"],
+["PAS","2026-09-18","D-V-7a10","ALTO","MEDIO","BAJO","BAJO","BAJO","Tiene trips"],
+["PAS","2026-09-18","F-V-19a24","ALTO","MEDIO","BAJO","BAJO","MEDIO","Tiene trips. Cardo naciendo"],
+["PAS","2026-09-18","G-V-19a24","ALTO","MEDIO","BAJO","BAJO","MEDIO","Tiene trips. Cardo naciendo"],
+["PAS","2026-09-18","H-V-19a24","ALTO","MEDIO","BAJO","BAJO","MEDIO","Tiene trips. Cardo naciendo"],
+["PAS","2026-09-18","H-V-13a18","ALTO","ALTO","BAJO","BAJO","BAJO","Tiene trips. Cardo naciendo en las puntas"],
+["PAS","2026-09-18","H-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Tiene trips. Algunas manchas de zanahorilla"],
+["PAS","2026-09-18","H-V-1a6","ALTO","ALTO","BAJO","BAJO","BAJO","Tiene trips. Manchas de zanahorilla"],
+["PAS","2026-09-18","I-V-1a6","ALTO","ALTO","BAJO","BAJO","BAJO","Tiene trips. Manchas de zanahorilla"],
+["PAS","2026-09-18","I-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Tiene trips. Manchas de zanahorilla"],
+["PAS","2026-09-18","I-V-13a18","ALTO","ALTO","BAJO","BAJO","BAJO","Tiene trips. Cardo naciendo en las puntas"],
+["PAS","2026-09-18","I-V-19a24","ALTO","MEDIO","BAJO","BAJO","MEDIO","Tiene trips. Cardo naciendo"],
+["PAS","2026-09-19","J-V-1a6","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips, uno que otro. Hay zanahorilla en partes"],
+["PAS","2026-09-19","K-V-3a6","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips, uno que otro. Hay zanahorilla en partes"],
+["PAS","2026-09-19","K-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips, uno que otro. Hay zanahorilla en partes"],
+["PAS","2026-09-19","M-V-7a12","ALTO","ALTO","BAJO","MEDIO","BAJO","Hay trips, uno que otro"],
+["PAS","2026-09-19","N-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips, uno que otro"],
+["PAS","2026-09-19","N-V-13a18","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips, uno que otro"],
+["PAS","2026-09-19","N-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Hay trips, uno que otro"],
+["PAS","2026-09-19","P-V-7a12","ALTO","ALTO","BAJO","MEDIO","BAJO","Hay trips, uno que otro"],
+["PAS","2026-09-19","Q-V-7a12","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips, uno que otro"],
+["PAS","2026-09-19","Q-V-13a18","ALTO","ALTO","BAJO","BAJO","BAJO","Hay trips, uno que otro"],
+["PAS","2026-09-19","Q-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Hay trips, uno que otro"],
+["MA","2026-09-22","1","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-22","2","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-22","3","ALTO","MEDIO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-22","4","ALTO","MEDIO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-22","5","ALTO","ALTO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-22","6","ALTO","ALTO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-22","7","MEDIO","MEDIO","BAJO","NULO","MEDIO","Puntas amarillas"],
+["MA","2026-09-22","8","ALTO","MEDIO","BAJO","NULO","BAJO",""],
+["MA","2026-09-22","9","ALTO","BAJO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-22","10","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["PAS","2026-09-22","C-V-7a10","ALTO","MEDIO","BAJO","MEDIO","BAJO","Falta humedad. Amarillo las puntas. Hay trips"],
+["PAS","2026-09-22","D-V-7a10","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","F-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","G-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","H-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","H-V-13a18","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","H-V-7a12","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","H-V-1a6","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","I-V-1a6","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","I-V-7a12","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","I-V-13a18","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad. Hay trips"],
+["PAS","2026-09-22","I-V-19a24","ALTO","MEDIO","BAJO","BAJO","BAJO","Falta humedad por los vientos continuos"],
+["CV","2026-09-17","G-1-6","ALTO","MEDIO","NULO","NULO","BAJO","Ya se aplicó herbicida"],
+["CV","2026-09-17","G-7-18","ALTO","ALTO","NULO","BAJO","BAJO","Ya se aplicó herbicida"],
+["CV","2026-09-17","G-19-21","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-17","H-14-18","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-17","H-19-21","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-17","I-4-13","ALTO","ALTO","NULO","MEDIO","BAJO","Ya se aplicó herbicida"],
+["CV","2026-09-17","I-14-21","ALTO","MEDIO","NULO","BAJO","BAJO","Ya se aplicó herbicida"],
+["CV","2026-09-17","R-15-26","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-17","S-12-23","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-17","T-9-14","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-18","Q-1-12","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-18","P-1-10","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-18","P-11-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-18","O-1-4","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-18","O-5-6","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-09-18","F-1-9","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-18","F-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-18","E-1-7","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-18","E-10-12","ALTO","ALTO","NULO","NULO","BAJO",""],
+["CV","2026-09-18","C-1-5","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-18","C-10-12","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-09-18","D-1-7","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-18","D-10-12","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-09-21","R-15-26","ALTO","MEDIO","NULO","NULO","NULO","P.B. en válvula 17, al norte"],
+["CV","2026-09-21","S-12-23","ALTO","MEDIO","NULO","BAJO","NULO",""],
+["CV","2026-09-21","T-9-14","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-21","I-4-13","ALTO","MEDIO","NULO","MEDIO","BAJO",""],
+["CV","2026-09-21","I-14-21","ALTO","MEDIO","NULO","BAJO","BAJO",""],
+["CV","2026-09-21","H-14-18","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-09-21","H-19-21","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["CV","2026-09-21","G-1-6","ALTO","MEDIO","NULO","NULO","NULO",""],
+["CV","2026-09-21","G-7-18","ALTO","ALTO","NULO","BAJO","BAJO",""],
+["CV","2026-09-21","G-19-21","ALTO","MEDIO","NULO","NULO","BAJO",""],
+["MA","2026-09-21","25","ALTO","ALTO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-21","27","ALTO","ALTO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-21","29","MEDIO","ALTO","BAJO","NULO","MEDIO","Puntas amarillas"],
+["MA","2026-09-21","28","ALTO","MEDIO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-21","30","ALTO","MEDIO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-21","32","ALTO","ALTO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-21","34","ALTO","ALTO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-21","36","ALTO","ALTO","BAJO","NULO","BAJO","Puntas amarillas"],
+["MA","2026-09-21","38","ALTO","ALTO","BAJO","NULO","BAJO","Puntas amarillas"],
+["PAN","2026-09-21","AN-V-1a6","ALTO","BAJO","BAJO","BAJO","BAJO","Está bastante oreado por el viento. No encontré trips"],
+["PAN","2026-09-21","BN-V-1a6","ALTO","BAJO","BAJO","BAJO","BAJO","Está bastante oreado por el viento. No encontré trips"],
+["PAN","2026-09-21","CN-V-1a12","ALTO","BAJO","BAJO","BAJO","BAJO","Está bastante oreado por el viento. No encontré trips"],
+["PAN","2026-09-21","GN-V-1a9","ALTO","BAJO","BAJO","BAJO","BAJO","Está bastante oreado por el viento. No encontré trips"],
+["PAN","2026-09-21","HN-V-1a9","ALTO","BAJO","BAJO","BAJO","BAJO","Para no exagerar, llegamos al límite con la humedad por el viento"],
+["Z","2026-09-18","A-1-4","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-18","B-1-4","ALTO","ALTO","BAJO","MEDIO","BAJO",""],
+["Z","2026-09-18","C-1-4","ALTO","ALTO","BAJO","BAJO","BAJO",""],
+["Z","2026-09-18","D-1-4","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-18","E-1-4","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-18","F-2-7","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-18","I-1-12","ALTO","ALTO","BAJO","MEDIO","BAJO","En los cuadros marcados con puntos rojos, el tallo de la planta de ajo es grueso"],
+["Z","2026-09-18","J-1-12","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-04","A-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-09-04","B-1-4","ALTO","ALTO","BAJO","MEDIO","NULO",""],
+["Z","2026-09-04","C-1-4","ALTO","ALTO","BAJO","BAJO","BAJO",""],
+["Z","2026-09-04","D-1-4","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-04","E-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-09-04","F-2-7","ALTO","ALTO","NULO","NULO","NULO",""],
+["Z","2026-09-04","I-1-12","ALTO","ALTO","BAJO","MEDIO","BAJO",""],
+["Z","2026-09-04","J-1-12","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-11","A-1-4","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-11","B-1-4","ALTO","ALTO","BAJO","MEDIO","BAJO",""],
+["Z","2026-09-11","C-1-4","ALTO","ALTO","BAJO","BAJO","BAJO",""],
+["Z","2026-09-11","D-1-4","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-11","E-1-4","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-11","F-2-7","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-09-11","I-1-12","ALTO","ALTO","BAJO","MEDIO","BAJO",""],
+["Z","2026-09-11","J-1-12","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-08-04","B-1-4","MEDIO","ALTO","BAJO","MEDIO","MEDIO",""],
+["Z","2026-08-04","C-1-4","ALTO","ALTO","BAJO","BAJO","MEDIO",""],
+["Z","2026-08-04","D-1-4","MEDIO","ALTO","BAJO","BAJO","BAJO",""],
+["Z","2026-08-04","E-1-4","ALTO","ALTO","BAJO","BAJO","MEDIO",""],
+["Z","2026-08-04","F-2-7","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-04","I-1-12","MEDIO","ALTO","BAJO","MEDIO","MEDIO",""],
+["Z","2026-08-04","J-1-12","ALTO","ALTO","BAJO","BAJO","NULO",""],
+["Z","2026-08-14","A-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-14","B-1-4","ALTO","ALTO","BAJO","MEDIO","NULO",""],
+["Z","2026-08-14","C-1-4","ALTO","ALTO","BAJO","BAJO","NULO",""],
+["Z","2026-08-14","D-1-4","ALTO","ALTO","BAJO","BAJO","NULO",""],
+["Z","2026-08-14","E-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-14","F-2-7","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-14","I-1-12","ALTO","ALTO","BAJO","MEDIO","BAJO",""],
+["Z","2026-08-14","J-1-12","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-08-21","A-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-21","B-1-4","ALTO","ALTO","MEDIO","MEDIO","NULO",""],
+["Z","2026-08-21","C-1-4","ALTO","ALTO","BAJO","BAJO","NULO",""],
+["Z","2026-08-21","D-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-21","E-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-21","F-2-7","ALTO","ALTO","NULO","NULO","NULO",""],
+["Z","2026-08-21","I-1-12","ALTO","ALTO","BAJO","MEDIO","BAJO",""],
+["Z","2026-08-21","J-1-12","ALTO","ALTO","BAJO","NULO","BAJO",""],
+["Z","2026-08-28","A-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-28","B-1-4","ALTO","ALTO","BAJO","MEDIO","NULO",""],
+["Z","2026-08-28","C-1-4","ALTO","ALTO","BAJO","BAJO","NULO",""],
+["Z","2026-08-28","D-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-28","E-1-4","ALTO","ALTO","BAJO","NULO","NULO",""],
+["Z","2026-08-28","F-2-7","ALTO","ALTO","NULO","NULO","NULO",""],
+["Z","2026-08-28","I-1-12","ALTO","ALTO","BAJO","MEDIO","BAJO",""],
+["Z","2026-08-28","J-1-12","ALTO","ALTO","BAJO","NULO","BAJO",""],
+];
+
+const idx=v=>{if(v==null)return null;const s=String(v).trim().toUpperCase();
+  const i=NIVELES.indexOf(s);if(i>=0)return i;const c={N:0,B:1,M:2,A:3,E:4};
+  return s?(c[s[0]]??null):null;};
+
+const CANON={G:[[1,13],[14,21]],I:[[4,13],[14,21]],H:[[14,21]]};
+function expandir(r){
+  if(r.finca!=="CV")return[r];
+  let b=String(r.bloque).toUpperCase().replace(/\s/g,"").replace(/^J-/,"I-");
+  const m=b.match(/^([A-Z])-(\d+)-(\d+)$/); if(!m)return[{...r,bloque:b}];
+  const [,L,ds,hs]=m; if(L==="R")return[{...r,bloque:"R-15-26"}];
+  const tr=CANON[L]; if(!tr)return[{...r,bloque:b}];
+  const d=+ds,h2=+hs;
+  const toc=tr.filter(([a,z])=>d<=z&&h2>=a);
+  if(!toc.length)return[{...r,bloque:b}];
+  return toc.map(([a,z])=>{
+    const exacto=(d===a&&h2===z), todo=(d<=a&&h2>=z);
+    let obs=r.observacion||"";
+    if(!exacto){
+      const de=Math.max(d,a),ha=Math.min(h2,z);
+      const av="Sector recorrido: válvulas "+de+" a "+ha+(todo?" (registro que abarca varios tramos)":"");
+      obs=obs?av+". "+obs:av;
+    }
+    return{...r,bloque:L+"-"+a+"-"+z,observacion:obs};
+  });
+}
+function normalizar(rs){
+  const m=new Map();
+  rs.flatMap(expandir).forEach(r=>{
+    const k=r.finca+"|"+r.fecha+"|"+r.bloque, p=m.get(k);
+    if(!p){m.set(k,r);return;}
+    const f={...p};
+    ["verdor","humedad","plaga","enfermedad","malezas"].forEach(x=>{
+      const a=idx(p[x]),b=idx(r[x]);
+      if(a==null)f[x]=r[x]; else if(b!=null&&b>a)f[x]=r[x];
+    });
+    const ob=[p.observacion,r.observacion].filter(o=>o&&o.trim());
+    f.observacion=[...new Set(ob)].join(" · ");
+    m.set(k,f);
+  });
+  return[...m.values()];
+}
+
+const REG=normalizar(CRUDO.map(r=>({finca:r[0],fecha:r[1],bloque:r[2],verdor:r[3],humedad:r[4],
+  plaga:r[5],enfermedad:r[6],malezas:r[7],observacion:r[8]})));
+
+function meta(finca,bloque){
+  const b=String(bloque).toUpperCase().replace(/\s/g,"");
+  const nums=(b.match(/\d+/g)||[]).map(Number);
+  const L=(b.match(/^[A-Z]+/)||["?"])[0];
+  const d=nums.length?nums[0]:null,h=nums.length>1?nums[nums.length-1]:d;
+  let tex="arenoso",agr=false;
+  if(finca==="CV"&&["C","D","E","F"].includes(L)){
+    if(d>=10)tex="arcilloso"; else if(h>=10&&d<10){tex="mixto";agr=true;}
+  }
+  return{L,d,h,tex,agr};
+}
+const fc=f=>{const p=f.split("-");return(+p[2])+"/"+(+p[1]);};
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
+
+let FINCA="CV",PARAM="humedad";
+const FINCAS=[...new Set(REG.map(r=>r.finca))].sort();
+
+function pills(cont,items,activo,onSel){
+  cont.innerHTML="";
+  items.forEach(it=>{const b=el("button","pill",it.l);b.setAttribute("aria-pressed",it.v===activo);
+    b.onclick=()=>onSel(it.v);cont.appendChild(b);});
+}
+
+function render(){
+  const datos=REG.filter(r=>r.finca===FINCA);
+  const fechas=[...new Set(datos.map(r=>r.fecha))].sort();
+  const cel=(b,f)=>datos.find(r=>r.bloque===b&&r.fecha===f);
+  const mm=new Map();
+  datos.forEach(r=>{if(!mm.has(r.bloque))mm.set(r.bloque,meta(FINCA,r.bloque));});
+  const bloques=[...mm.entries()].map(([bloque,m])=>({bloque,...m}))
+    .sort((a,b)=>a.L.localeCompare(b.L)||(a.d||0)-(b.d||0));
+  const P=PARAMS.find(p=>p.k===PARAM);
+  document.getElementById("t-mat").textContent="Matriz ordinal · "+P.l;
+  document.getElementById("t-comp").textContent="Composición de la finca por recorrido · "+P.l;
+
+  // matriz
+  const tb=document.getElementById("matriz");tb.innerHTML="";
+  const thead=el("thead"),trh=el("tr");
+  trh.appendChild(el("th","b","Bloque"));
+  fechas.forEach(f=>trh.appendChild(el("th",null,fc(f))));
+  thead.appendChild(trh);tb.appendChild(thead);
+  const tbody=el("tbody");
+  bloques.forEach(b=>{
+    const tr=el("tr");
+    const td=el("td","b "+(b.tex==="arcilloso"?"arc":b.tex==="mixto"?"agr":""));
+    td.textContent=b.bloque;
+    if(b.tex==="arcilloso")td.appendChild(el("span","tag","ARC"));
+    if(b.tex==="mixto")td.appendChild(el("span","tag","AGR"));
+    tr.appendChild(td);
+    fechas.forEach(f=>{
+      const r=cel(b.bloque,f),i=r?idx(r[PARAM]):null;
+      const c=el("td","cel",i==null?"·":ABREV[NIVELES[i]]);
+      c.style.background=i==null?"transparent":RAMPA[i];
+      c.style.color=i==null?"var(--regla)":TXT[i];
+      c.title=r?b.bloque+" · "+fc(f)+" · "+(r[PARAM]||"sin dato"):"sin recorrido";
+      if(r&&r.observacion&&r.observacion.trim()){
+        const d=el("span","dot");d.style.background=i>=3?"#07161C":"var(--tinta)";c.appendChild(d);}
+      tr.appendChild(c);
+    });
+    tbody.appendChild(tr);
+  });
+  tb.appendChild(tbody);
+
+  const ley=document.getElementById("ley");ley.innerHTML="";
+  NIVELES.forEach((n,i)=>{const s=el("span");s.innerHTML='<span class="sw" style="background:'+RAMPA[i]+'"></span>'+n;ley.appendChild(s);});
+  const a=el("span");a.innerHTML='<span class="sw" style="background:var(--arcilla);width:4px"></span>ARC · tramo arcilloso 10-12';ley.appendChild(a);
+
+  // transiciones
+  const tr=[];
+  bloques.forEach(({bloque})=>{
+    const serie=fechas.map(f=>cel(bloque,f)).filter(Boolean);
+    for(let i=1;i<serie.length;i++){
+      PARAMS.forEach(p=>{
+        const x=idx(serie[i-1][p.k]),y=idx(serie[i][p.k]);
+        if(x==null||y==null||x===y)return;
+        const sg=y>x?1:-1;
+        tr.push({bloque,par:p.l,salto:Math.abs(y-x),de:NIVELES[x],a:NIVELES[y],fecha:serie[i].fecha,
+          cls:p.d===0?"":(sg*p.d>0?"mej":"det")});
+      });
+    }
+  });
+  tr.sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.salto-a.salto);
+  const ct=document.getElementById("trans");ct.innerHTML="";
+  if(!tr.length)ct.appendChild(el("p","vacio","Sin cambios registrados en esta finca."));
+  tr.forEach(t=>{
+    const d=el("div","item "+t.cls);
+    d.appendChild(el("span","f",fc(t.fecha)));
+    d.appendChild(el("strong","bq",t.bloque));
+    d.appendChild(el("span",null,t.par));
+    const s=el("span","f");s.textContent=t.de+" → "+t.a;d.appendChild(s);
+    if(t.salto>1){const w=el("span","badge","SALTO DE "+t.salto+" NIVELES");w.style.color="var(--det)";d.appendChild(w);}
+    ct.appendChild(d);
+  });
+
+  // composición
+  const cb=document.getElementById("barras");cb.innerHTML="";
+  const maxN=Math.max(...fechas.map(f=>datos.filter(r=>r.fecha===f).length),1);
+  fechas.forEach(f=>{
+    const dd=datos.filter(r=>r.fecha===f);
+    const col=el("div","col"),pila=el("div","pila");
+    NIVELES.forEach((n,i)=>{
+      const c=dd.filter(r=>idx(r[PARAM])===i).length;
+      if(!c)return;
+      const s=el("div","seg");s.style.height=(c/maxN*180)+"px";s.style.background=RAMPA[i];
+      s.title=n+": "+c+" bloque"+(c===1?"":"s");pila.appendChild(s);
+    });
+    col.appendChild(pila);col.appendChild(el("div","xlab",fc(f)));cb.appendChild(col);
+  });
+  const sv=PARAMS.filter(p=>new Set(datos.map(r=>idx(r[p.k]))).size<=1);
+  document.getElementById("nvar").textContent=sv.length
+    ?"Sin variación en toda la finca: "+sv.map(p=>p.l+" ("+(datos[0][p.k]||"—")+")").join(" · "):"";
+
+  // podredumbre blanca
+  const pb=datos.filter(r=>/\bp\.?\s?b\.?\b|podredumbre blanca/i.test(r.observacion||""))
+    .sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const cpb=document.getElementById("pb");cpb.innerHTML="";
+  if(pb.length){
+    const box=el("div","alerta");box.appendChild(el("div","t","PODREDUMBRE BLANCA · REGISTRO PUNTUAL"));
+    pb.forEach(r=>{const l=el("div");l.style.fontSize="13px";l.style.marginBottom="3px";
+      l.innerHTML='<span class="f">'+fc(r.fecha)+'</span> <strong class="bq">'+r.bloque+'</strong> '+r.observacion;
+      box.appendChild(l);});
+    const n=el("p","nota","Foco localizado. Evitar el movimiento de suelo desde el punto afectado y no arrastrar agua ni maquinaria fuera de él. La escala ordinal de Enfermedad no refleja esta condición: se sigue por observación.");
+    n.style.margin="8px 0 0";box.appendChild(n);cpb.appendChild(box);
+  }
+
+  // focos
+  const fo=[];
+  bloques.forEach(({bloque})=>{
+    const serie=fechas.map(f=>cel(bloque,f)).filter(Boolean);
+    let ra=0,de=null;
+    serie.forEach(r=>{if((idx(r.enfermedad)??0)>=2){ra++;if(ra===1)de=r.fecha;}else{ra=0;de=null;}});
+    if(ra>=2)fo.push({bloque,ra,de,niv:serie[serie.length-1].enfermedad});
+  });
+  fo.sort((a,b)=>b.ra-a.ra);
+  const cf=document.getElementById("focos");cf.innerHTML="";
+  if(!fo.length)cf.appendChild(el("p","vacio","Sin focos sostenidos en esta finca."));
+  fo.forEach(f=>{const d=el("div","item det");
+    d.appendChild(el("strong","bq",f.bloque));
+    d.appendChild(el("span",null,"Enfermedad "+f.niv+" · "+f.ra+" recorridos consecutivos"));
+    d.appendChild(el("span","f","desde "+fc(f.de)));cf.appendChild(d);});
+
+  // observaciones
+  const ob=datos.filter(r=>r.observacion&&r.observacion.trim()).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const co=document.getElementById("obs");co.innerHTML="";
+  if(!ob.length)co.appendChild(el("p","vacio","Sin comentarios escritos en los recorridos de esta finca."));
+  ob.forEach(r=>{const d=el("div","item");
+    d.appendChild(el("span","f",fc(r.fecha)));
+    d.appendChild(el("strong","bq",r.bloque));
+    d.appendChild(el("span",null,r.observacion));co.appendChild(d);});
+
+  // intervenciones
+  const iv=datos.filter(r=>/herbicida|aplicaci|se aplic/i.test(r.observacion||""))
+    .map(r=>{const ej=/se\s+aplic|ya\s+se\s+aplic/i.test(r.observacion);
+      const m=r.observacion.match(/(\d{1,3})\s*%/);
+      return{...r,ej,cob:m?+m[1]:(ej?100:null)};})
+    .sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const ci=document.getElementById("interv");ci.innerHTML="";
+  if(!iv.length)ci.appendChild(el("p","vacio","Sin registros de aplicación en esta finca."));
+  iv.forEach(r=>{
+    const par=r.ej&&r.cob!=null&&r.cob<100;
+    const d=el("div","item "+(!r.ej?"":par?"par":"ok"));
+    d.appendChild(el("span","f",fc(r.fecha)));
+    d.appendChild(el("strong","bq",r.bloque));
+    const b=el("span","badge",!r.ej?"INDETERMINADO":par?("PARCIAL · "+r.cob+"%"):"EJECUTADA");
+    b.style.color=!r.ej?"var(--tenue)":par?"var(--arcilla)":"var(--mej)";
+    d.appendChild(b);
+    if(par){const q=el("span",null,"Queda "+(100-r.cob)+"% sin tratar");q.style.color="var(--det)";d.appendChild(q);}
+    ci.appendChild(d);
+  });
+
+  // control textural
+  const ct2=document.getElementById("text");ct2.innerHTML="";
+  const inv=[];
+  if(FINCA==="CV"){
+    fechas.forEach(f=>{
+      const dd=datos.filter(r=>r.fecha===f);
+      ["C","D","E","F"].forEach(L=>{
+        const arc=dd.find(r=>meta("CV",r.bloque).L===L&&meta("CV",r.bloque).tex==="arcilloso");
+        const are=dd.find(r=>meta("CV",r.bloque).L===L&&meta("CV",r.bloque).tex==="arenoso");
+        if(arc&&are&&idx(arc.humedad)<=idx(are.humedad))inv.push({f,L,a:arc.humedad,b:are.humedad});
+      });
+    });
+  }
+  if(!inv.length)ct2.appendChild(el("p","vacio",FINCA==="CV"
+    ?"Sin inversiones. El gradiente hídrico entre tramos se comporta como corresponde a la textura."
+    :"El control textural aplica solo a la finca CV."));
+  inv.forEach(v=>{const d=el("div","item det");
+    d.appendChild(el("span","f",fc(v.f)));
+    d.appendChild(el("span",null,"Línea "+v.L+": tramo arcilloso en "+v.a+" contra arenoso en "+v.b+". Revisar entrega de riego."));
+    ct2.appendChild(d);});
+}
+
+function setFinca(v){FINCA=v;dibujarPills();render();}
+function setParam(v){PARAM=v;dibujarPills();render();}
+function dibujarPills(){
+  pills(document.getElementById("pf"),FINCAS.map(f=>({v:f,l:f})),FINCA,setFinca);
+  pills(document.getElementById("pp"),PARAMS.map(p=>({v:p.k,l:p.l})),PARAM,setParam);
+}
+dibujarPills();render();
+</script>
+</body>
+</html>
